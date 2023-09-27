@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+	<Properties>
+		<Property name="LOG_PATTERN">
+			%d{mm:ss.SSS} %5p [%15.15t] [%-35.35c{1.}] : %m{nolookups}%n%ex
+		</Property>
+	</Properties>
+
+	<Appenders>
+		<Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
+			<PatternLayout pattern="${LOG_PATTERN}"/>
+		</Console>
+	</Appenders>
+
+	<Loggers>
+		<AsyncLogger name="org.chentelman.base" level="error" additivity="false">
+			<AppenderRef ref="ConsoleAppender"/>
+		</AsyncLogger>
+
+		<AsyncLogger name="org.springframework.web" level="error" additivity="false">
+			<AppenderRef ref="ConsoleAppender"/>
+		</AsyncLogger>
+
+		<AsyncLogger name="org.springframework.cache" level="error" additivity="false">
+			<AppenderRef ref="ConsoleAppender"/>
+		</AsyncLogger>
+
+		<AsyncLogger name="org.springframework" level="error" additivity="false">
+			<AppenderRef ref="ConsoleAppender"/>
+		</AsyncLogger>
+
+		<AsyncLogger name="org.springframework.data" level="error" additivity="false">
+			<AppenderRef ref="ConsoleAppender"/>
+		</AsyncLogger>
+
+		<AsyncLogger name="com.zaxxer.hikari" level="error" additivity="false">
+			<AppenderRef ref="ConsoleAppender"/>
+		</AsyncLogger>
+
+		<AsyncLogger name="org.hibernate.engine" level="error" additivity="false">
+			<AppenderRef ref="ConsoleAppender"/>
+		</AsyncLogger>
+
+		<AsyncLogger name="org.hibernate.stat" level="error" additivity="false">
+			<AppenderRef ref="ConsoleAppender"/>
+		</AsyncLogger>
+
+		<AsyncLogger name="org.hibernate.SQL" level="error" additivity="false">
+			<AppenderRef ref="ConsoleAppender"/>
+		</AsyncLogger>
+
+		<AsyncLogger name="org.hibernate.type.descriptor.sql.BasicBinder" level="error" additivity="false">
+			<AppenderRef ref="ConsoleAppender"/>
+		</AsyncLogger>
+
+		<AsyncLogger name="net.ttddyy.dsproxy.listener.logging.SLF4JQueryLoggingListener" level="error" additivity="false">
+			<AppenderRef ref="ConsoleAppender"/>
+		</AsyncLogger>
+
+		<Root level="error">
+			<AppenderRef ref="ConsoleAppender"/>
+		</Root>
+
+	</Loggers>
+</Configuration>

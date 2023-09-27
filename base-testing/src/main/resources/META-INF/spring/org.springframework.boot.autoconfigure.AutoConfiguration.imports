@@ -1,0 +1,4 @@
+org.chentelman.base.testing.configuration.BaseTestingConfiguration
+org.chentelman.base.testing.configuration.BaseTestingEncoderConfiguration
+org.chentelman.base.testing.configuration.BaseTestingDecoderConfiguration
+org.chentelman.base.testing.configuration.BaseTestJsonGeneratorConfiguration

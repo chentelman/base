@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<!-- Packaging -->
+	<modelVersion>4.0.0</modelVersion>
+	<packaging>pom</packaging>
+
+	<!-- Versioning -->
+	<groupId>org.chentelman.base</groupId>
+	<artifactId>base-root</artifactId>
+	<version>0-SNAPSHOT</version>
+
+	<!-- Meta-data -->
+	<name>[${project.artifactId}]</name>
+	<description>Parent module for all ${project.groupId} modules</description>
+	<inceptionYear>2023</inceptionYear>
+
+	<properties>
+		<java.version>11</java.version>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<!-- JACOCO VERSIONS -->
+		<jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
+
+		<!-- MAVEN VERSIONS -->
+		<maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
+		<maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
+		<maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
+		<maven-surefire-report-plugin.version>3.1.2</maven-surefire-report-plugin.version>
+		<maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+		<maven-dependency-plugin.version>3.6.0</maven-dependency-plugin.version>
+		<maven-project-info-reports-plugin.version>3.4.2</maven-project-info-reports-plugin.version>
+		<maven-site.version>4.0.0</maven-site.version>
+
+		<!-- CODEHAUS VERSION -->
+		<codehaus-versions-maven-plugin.version>2.16.0</codehaus-versions-maven-plugin.version>
+
+		<!-- SPRING BOOT VERSION -->
+		<spring-boot-maven-plugin.version>3.0.5</spring-boot-maven-plugin.version>
+	</properties>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+
+				<!-- JACOCO PLUGINS -->
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>${jacoco-maven-plugin.version}</version>
+				</plugin>
+
+				<!-- MAVEN PLUGINS -->
+				<plugin>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>${maven-jar-plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>${maven-resources-plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${maven-surefire-plugin.version}</version>
+					<!-- https://stackoverflow.com/questions/46831762/maven-build-and-maven-failsafe-plugin-the-forked-vm-terminated-without-properl -->
+					<configuration>
+						<forkedProcessExitTimeoutInSeconds>300</forkedProcessExitTimeoutInSeconds>
+						<useSystemClassLoader>false</useSystemClassLoader>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-report-plugin</artifactId>
+					<version>${maven-surefire-report-plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven-compiler-plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>${maven-dependency-plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+					<version>${maven-project-info-reports-plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>${maven-site.version}</version>
+				</plugin>
+
+				<!-- CODEHAUS PLUGINS -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>versions-maven-plugin</artifactId>
+					<version>${codehaus-versions-maven-plugin.version}</version>
+				</plugin>
+
+				<!-- SPRING BOOT PLUGINS -->
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+					<version>${spring-boot-maven-plugin.version}</version>
+				</plugin>
+
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<modules>
+		<module>base-plugins</module>
+		<module>base-testing</module>
+		<module>base-modules</module>
+		<module>base-boms</module>
+		<module>base-parents</module>
+		<module>base-example</module>
+	</modules>
+
+</project>

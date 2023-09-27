@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<!-- Packaging -->
+	<modelVersion>4.0.0</modelVersion>
+	<packaging>pom</packaging>
+
+	<!-- Versioning -->
+	<artifactId>base-modules-parent</artifactId>
+
+	<!-- Meta-data -->
+	<name>[${project.artifactId}]</name>
+	<description>Parent module for all ${project.groupId} modules</description>
+	<inceptionYear>2023</inceptionYear>
+
+	<parent>
+		<groupId>org.chentelman.base</groupId>
+		<artifactId>base-root</artifactId>
+		<version>0-SNAPSHOT</version>
+		<relativePath>..</relativePath>
+	</parent>
+
+	<dependencyManagement>
+		<dependencies>
+
+			<dependency>
+				<groupId>org.chentelman.base</groupId>
+				<artifactId>base-bom-external</artifactId>
+				<version>${project.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.chentelman.base</groupId>
+				<artifactId>base-bom-internal</artifactId>
+				<version>${project.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+
+	</dependencies>
+
+	<modules>
+		<module>base-module-core</module>
+		<module>base-module-data</module>
+		<module>base-module-http</module>
+		<module>base-module-rest</module>
+		<module>base-module-client</module>
+		<module>base-module-service</module>
+	</modules>
+
+</project>

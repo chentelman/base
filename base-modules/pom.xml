@@ -61,6 +61,7 @@
 		<module>base-module-rest</module>
 		<module>base-module-client</module>
 		<module>base-module-service</module>
+		<module>base-module-math</module>
 	</modules>
 
 </project>

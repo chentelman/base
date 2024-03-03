@@ -1,6 +1,7 @@
 package org.chentelman.base.plugins.validation.source;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -63,6 +64,19 @@ public class SourceTraversal implements Iterator<File> {
 	}
 
 	private boolean isValid (File file) {
+		try {
+			for (String path : exludePaths) {
+				if (file.getAbsolutePath().startsWith(path)) {
+					return false;
+				}
+				if (file.getCanonicalPath().startsWith(path)) {
+					return false;
+				}
+			}
+		} catch (IOException e) {
+			return false;
+		}
+
 		return true;
 	}
 

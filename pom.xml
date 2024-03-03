@@ -25,9 +25,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<!-- JACOCO VERSIONS -->
-		<jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
-
 		<!-- MAVEN VERSIONS -->
 		<maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
 		<maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
@@ -38,23 +35,13 @@
 		<maven-project-info-reports-plugin.version>3.4.2</maven-project-info-reports-plugin.version>
 		<maven-site.version>4.0.0</maven-site.version>
 
-		<!-- CODEHAUS VERSION -->
-		<codehaus-versions-maven-plugin.version>2.16.0</codehaus-versions-maven-plugin.version>
-
-		<!-- SPRING BOOT VERSION -->
-		<spring-boot-maven-plugin.version>3.0.5</spring-boot-maven-plugin.version>
+		<!-- plugin versions -->
+		<frontend-maven-plugin.version>1.12.1</frontend-maven-plugin.version>
 	</properties>
 
 	<build>
 		<pluginManagement>
 			<plugins>
-
-				<!-- JACOCO PLUGINS -->
-				<plugin>
-					<groupId>org.jacoco</groupId>
-					<artifactId>jacoco-maven-plugin</artifactId>
-					<version>${jacoco-maven-plugin.version}</version>
-				</plugin>
 
 				<!-- MAVEN PLUGINS -->
 				<plugin>
@@ -108,18 +95,11 @@
 					<version>${maven-site.version}</version>
 				</plugin>
 
-				<!-- CODEHAUS PLUGINS -->
+				<!-- plugin versions -->
 				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>versions-maven-plugin</artifactId>
-					<version>${codehaus-versions-maven-plugin.version}</version>
-				</plugin>
-
-				<!-- SPRING BOOT PLUGINS -->
-				<plugin>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-maven-plugin</artifactId>
-					<version>${spring-boot-maven-plugin.version}</version>
+					<groupId>com.github.eirslett</groupId>
+					<artifactId>frontend-maven-plugin</artifactId>
+					<version>${frontend-maven-plugin.version}</version>
 				</plugin>
 
 			</plugins>

@@ -22,14 +22,12 @@ class CombinationsTest {
 	 */
 	@Test
 	void initialization () {
-		int[] combi = new int[] {2, 3, 4, 5};
+		int[] state  = {2, 3, 4, 5};
+		int[] expect = {0, 1, 2, 3};
 
-		Combinations.init(combi);
+		Combinations.init(state);
 
-		assertEquals(0, combi[0]);
-		assertEquals(1, combi[1]);
-		assertEquals(2, combi[2]);
-		assertEquals(3, combi[3]);
+		assertArrayEquals(expect, state);
 	}
 
 	/**
@@ -38,12 +36,12 @@ class CombinationsTest {
 	 */
 	@Test
 	void instantiation () {
-		int[] combi = Combinations.init(3, 6);
+		int[] state  = Combinations.init(3, 6);
+		int[] expect = {0, 1, 2};
 
-		assertEquals(3, combi.length);
-		assertEquals(0, combi[0]);
-		assertEquals(1, combi[1]);
-		assertEquals(2, combi[2]);
+		Combinations.init(state);
+
+		assertArrayEquals(expect, state);
 	}
 
 	/**
@@ -53,10 +51,12 @@ class CombinationsTest {
 	 */
 	@Test
 	void instantiation_zero () {
-		int[] combi = Combinations.init(0, 6);
+		int[] state  = Combinations.init(0, 6);
+		int[] expect = {};
 
-		assertEquals(0, combi.length);
-		assertFalse(Combinations.next(0, combi));
+		Combinations.init(state);
+
+		assertArrayEquals(expect, state);
 	}
 
 	/**
@@ -91,14 +91,12 @@ class CombinationsTest {
 	 */
 	@Test
 	void nextnoloop () {
-		int[] combi = {0, 1, 2, 4};
+		int[] state  = {0, 1, 2, 4};
+		int[] expect = {0, 1, 2, 5};
 
-		assertTrue(Combinations.next(6, combi));
+		assertTrue(Combinations.next(6, state));
 
-		assertEquals(0, combi[0]);
-		assertEquals(1, combi[1]);
-		assertEquals(2, combi[2]);
-		assertEquals(5, combi[3]);
+		assertArrayEquals(expect, state);
 	}
 
 	/**
@@ -108,14 +106,12 @@ class CombinationsTest {
 	 */
 	@Test
 	void nextloop () {
-		int[] combi = {0, 1, 4, 5};
+		int[] state  = {0, 1, 4, 5};
+		int[] expect = {0, 2, 3, 4};
 
-		assertTrue(Combinations.next(6, combi));
+		assertTrue(Combinations.next(6, state));
 
-		assertEquals(0, combi[0]);
-		assertEquals(2, combi[1]);
-		assertEquals(3, combi[2]);
-		assertEquals(4, combi[3]);
+		assertArrayEquals(expect, state);
 	}
 
 	/**
@@ -125,14 +121,12 @@ class CombinationsTest {
 	 */
 	@Test
 	void nextend () {
-		int[] combi = {2, 3, 4, 5};
+		int[] state  = {2, 3, 4, 5};
+		int[] expect = {2, 3, 4, 5};
 
-		assertFalse(Combinations.next(4, 6, combi));
+		assertFalse(Combinations.next(4, 6, state));
 
-		assertEquals(2, combi[0]);
-		assertEquals(3, combi[1]);
-		assertEquals(4, combi[2]);
-		assertEquals(5, combi[3]);
+		assertArrayEquals(expect, state);
 	}
 
 	/**
@@ -260,63 +254,27 @@ class CombinationsTest {
 	}
 
 	/**
-	 * copy a string combination
+	 * generate combinations for no picks
+	 * a single empty combination exists
 	 */
 	@Test
-	void copy_string () {
-		int[] state    = new int[]{2, 3, 4};
-		String[] value = new String[] {"One", "Two", "Three", "Four", "Five"};
-		String[] copy  = Combinations.copy(state, value, String.class);
+	void of_empty () {
+		int[][] combinations = Combinations.of(0, 2);
+		int[][] expect = {{}};
 
-		assertArrayEquals(new String[] {"Three", "Four", "Five"}, copy);
+		assertArrayEquals(expect, combinations);
 	}
 
 	/**
-	 * copy a int combination
+	 * generate combinations for no values
+	 * no combination exist
 	 */
 	@Test
-	void copy_int () {
-		int[] state = new int[]{0, 2, 3, 4};
-		int[] value = new int[] {10, 11, 12, 13, 14, 15};
-		int[] copy  = Combinations.copy(state, value);
+	void of_nothing () {
+		int[][] combinations = Combinations.of(2, 0);
+		int[][] expect = {};
 
-		assertArrayEquals(new int[] {10, 12, 13, 14}, copy);
-	}
-
-	/**
-	 * copy a long combination
-	 */
-	@Test
-	void copy_long () {
-		int[] state  = new int[]{1, 2};
-		long[] value = new long[] {100000000000L, 100000000001L, 100000000002L, 100000000003L, 100000000004L, 100000000005L};
-		long[] copy  = Combinations.copy(state, value);
-
-		assertArrayEquals(new long[] {100000000001L, 100000000002L}, copy);
-	}
-
-	/**
-	 * copy a byte combination
-	 */
-	@Test
-	void copy_byte () {
-		int[] state  = new int[]{0, 3};
-		byte[] value = new byte[] {1, 2, 3, 4};
-		byte[] copy  = Combinations.copy(state, value);
-
-		assertArrayEquals(new byte[] {1, 4}, copy);
-	}
-
-	/**
-	 * copy a char combination
-	 */
-	@Test
-	void copy_char () {
-		int[] state  = new int[]{1, 2};
-		char[] value = new char[] {1, 2, 3, 4};
-		char[] copy  = Combinations.copy(state, value);
-
-		assertArrayEquals(new char[] {2, 3}, copy);
+		assertArrayEquals(expect, combinations);
 	}
 
 	/**
@@ -325,17 +283,13 @@ class CombinationsTest {
 	@Test
 	void of () {
 		int[][] combinations = Combinations.of(2, 3);
+		int[][] expect = {
+			{0, 1},
+			{0, 2},
+			{1, 2}
+		};
 
-		assertEquals(3, combinations.length);
-		assertEquals(2, combinations[0].length);
-		assertEquals(0, combinations[0][0]);
-		assertEquals(1, combinations[0][1]);
-		assertEquals(2, combinations[1].length);
-		assertEquals(0, combinations[1][0]);
-		assertEquals(2, combinations[1][1]);
-		assertEquals(2, combinations[2].length);
-		assertEquals(1, combinations[2][0]);
-		assertEquals(2, combinations[2][1]);
+		assertArrayEquals(expect, combinations);
 	}
 
 	/**
@@ -344,17 +298,13 @@ class CombinationsTest {
 	@Test
 	void of_string () {
 		String[][] combinations = Combinations.of(2, new String[] {"A", "B", "C"}, String.class);
+		String[][] expect = {
+			{"A", "B"},
+			{"A", "C"},
+			{"B", "C"}
+		};
 
-		assertEquals(3, combinations.length);
-		assertEquals(2, combinations[0].length);
-		assertEquals("A", combinations[0][0]);
-		assertEquals("B", combinations[0][1]);
-		assertEquals(2, combinations[1].length);
-		assertEquals("A", combinations[1][0]);
-		assertEquals("C", combinations[1][1]);
-		assertEquals(2, combinations[2].length);
-		assertEquals("B", combinations[2][0]);
-		assertEquals("C", combinations[2][1]);
+		assertArrayEquals(expect, combinations);
 	}
 
 	/**
@@ -363,17 +313,13 @@ class CombinationsTest {
 	@Test
 	void of_int () {
 		int[][] combinations = Combinations.of(2, new int[] {1, 2, 3});
+		int[][] expect = {
+			{1, 2},
+			{1, 3},
+			{2, 3}
+		};
 
-		assertEquals(3, combinations.length);
-		assertEquals(2, combinations[0].length);
-		assertEquals(1, combinations[0][0]);
-		assertEquals(2, combinations[0][1]);
-		assertEquals(2, combinations[1].length);
-		assertEquals(1, combinations[1][0]);
-		assertEquals(3, combinations[1][1]);
-		assertEquals(2, combinations[2].length);
-		assertEquals(2, combinations[2][0]);
-		assertEquals(3, combinations[2][1]);
+		assertArrayEquals(expect, combinations);
 	}
 
 	/**
@@ -382,17 +328,13 @@ class CombinationsTest {
 	@Test
 	void of_long () {
 		long[][] combinations = Combinations.of(2, new long[] {100000000001L, 100000000002L, 100000000003L});
+		long[][] expect = {
+			{100000000001L, 100000000002L},
+			{100000000001L, 100000000003L},
+			{100000000002L, 100000000003L}
+		};
 
-		assertEquals(3, combinations.length);
-		assertEquals(2, combinations[0].length);
-		assertEquals(100000000001L, combinations[0][0]);
-		assertEquals(100000000002L, combinations[0][1]);
-		assertEquals(2, combinations[1].length);
-		assertEquals(100000000001L, combinations[1][0]);
-		assertEquals(100000000003L, combinations[1][1]);
-		assertEquals(2, combinations[2].length);
-		assertEquals(100000000002L, combinations[2][0]);
-		assertEquals(100000000003L, combinations[2][1]);
+		assertArrayEquals(expect, combinations);
 	}
 
 	/**
@@ -401,17 +343,13 @@ class CombinationsTest {
 	@Test
 	void of_char () {
 		char[][] combinations = Combinations.of(2, new char[] {'A', 'B', 'C'});
+		char[][] expect = {
+			{'A', 'B'},
+			{'A', 'C'},
+			{'B', 'C'}
+		};
 
-		assertEquals(3, combinations.length);
-		assertEquals(2, combinations[0].length);
-		assertEquals('A', combinations[0][0]);
-		assertEquals('B', combinations[0][1]);
-		assertEquals(2, combinations[1].length);
-		assertEquals('A', combinations[1][0]);
-		assertEquals('C', combinations[1][1]);
-		assertEquals(2, combinations[2].length);
-		assertEquals('B', combinations[2][0]);
-		assertEquals('C', combinations[2][1]);
+		assertArrayEquals(expect, combinations);
 	}
 
 	/**
@@ -420,17 +358,13 @@ class CombinationsTest {
 	@Test
 	void of_byte () {
 		int[][] combinations = Combinations.of(2, new int[] {4, 5, 6});
+		int[][] expect = {
+			{4, 5},
+			{4, 6},
+			{5, 6}
+		};
 
-		assertEquals(3, combinations.length);
-		assertEquals(2, combinations[0].length);
-		assertEquals(4, combinations[0][0]);
-		assertEquals(5, combinations[0][1]);
-		assertEquals(2, combinations[1].length);
-		assertEquals(4, combinations[1][0]);
-		assertEquals(6, combinations[1][1]);
-		assertEquals(2, combinations[2].length);
-		assertEquals(5, combinations[2][0]);
-		assertEquals(6, combinations[2][1]);
+		assertArrayEquals(expect, combinations);
 	}
 
 }

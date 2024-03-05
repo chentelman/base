@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
 /**
  * This class implements a simple iterator over the permutations for a set of items
  */
-public class PermutationValueIterator<T> implements Iterator<T[]> {
+public class PermutationObjectIterator<T> implements Iterator<T[]> {
 	protected int[]   state;
 	protected boolean valid;
 	protected int     count;
@@ -20,7 +20,7 @@ public class PermutationValueIterator<T> implements Iterator<T[]> {
 	 * @param values the values to pick from
 	 * @param clazz the type of the values to pick from
 	 */
-	public PermutationValueIterator (int k, T[] values, Class<T> clazz) {
+	public PermutationObjectIterator (int k, T[] values, Class<T> clazz) {
 		this.count = k;
 		this.state = Permutations.init(k, values.length);
 		this.valid = this.state != null;
@@ -46,7 +46,7 @@ public class PermutationValueIterator<T> implements Iterator<T[]> {
 		}
 
 		try {
-			return Permutations.copy(count, state, items, clazz);
+			return TranslateUtils.copy(count, state, items, clazz);
 		} finally {
 			valid = Permutations.next(count, state);
 		}

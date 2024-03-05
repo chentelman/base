@@ -1,29 +1,31 @@
 package org.chentelman.base.module.math;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * This class implements a simple iterator over the combinations for n selections
- * The values for the combination is in the range [0,n) to allow them to be
- * used as indexes to an other set of item
+ * This class implements a simple iterator over the combinations for a set of items
  */
-public class CombinationIterator implements Iterator<int[]> {
+public class CombinationObjectIterator<T> implements Iterator<T[]> {
 	protected int[]   state;
 	protected boolean valid;
 	protected int     count;
+	private T[]       items;
+	private Class<T>  clazz;
 
 	/**
 	 * Initialize the iterator
 	 *
 	 * @param k the number of items to pick
-	 * @param n the number of items to pick from
+	 * @param values the values to pick from
+	 * @param clazz the type of the values to pick from
 	 */
-	public CombinationIterator (int k, int n) {
-		this.count = n;
-		this.state = Combinations.init(k, n);
+	public CombinationObjectIterator (int k, T[] values, Class<T> clazz) {
+		this.count = values.length;
+		this.state = Combinations.init(k, values.length);
 		this.valid = this.state != null;
+		this.items = values;
+		this.clazz = clazz;
 	}
 
 	/**
@@ -38,18 +40,17 @@ public class CombinationIterator implements Iterator<int[]> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int[] next() {
+	public T[] next() {
 		if (!valid) {
 			throw new NoSuchElementException();
 		}
 
 		try {
-			return Arrays.copyOf(state, state.length);
+			return TranslateUtils.copy(state, items, clazz);
 		} finally {
 			valid = Combinations.next(count, state);
 		}
 	}
-
 }
 
 

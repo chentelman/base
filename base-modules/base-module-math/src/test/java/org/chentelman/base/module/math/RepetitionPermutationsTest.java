@@ -4,15 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
 /**
- * Test cases for Permutations class
+ * Test cases for RepetitionPermutations class
  */
-class PermutationsTest {
+class RepetitionRepetitionPermutationsTest {
 
 	/**
 	 * verify the initialization of the permutation state
@@ -23,9 +21,9 @@ class PermutationsTest {
 	@Test
 	void initialization () {
 		int[] state  = {2, 3, 4, 5};
-		int[] expect = {0, 1, 3, 2};
+		int[] expect = {0, 0, 0, 0};
 
-		Permutations.init(2, state);
+		RepetitionPermutations.init(state);
 
 		assertArrayEquals(expect, state);
 	}
@@ -36,8 +34,8 @@ class PermutationsTest {
 	 */
 	@Test
 	void instantiation () {
-		int[] state  = Permutations.init(3, 6);
-		int[] expect = {0, 1, 2, 5, 4, 3};
+		int[] state  = RepetitionPermutations.init(3, 6);
+		int[] expect = {0, 0, 0};
 
 		assertArrayEquals(expect, state);
 	}
@@ -46,18 +44,14 @@ class PermutationsTest {
 	 * edge case: picking 0 items of a list
 	 * a single case for this permutation exist
 	 * the empty array.
-	 *
-	 * Quite surprisingly the state for the permutations
-	 * is still 6 (the number of items to pick from)
-	 * but initialized in a way that no next state exists.
 	 */
 	@Test
 	void instantiation_zero () {
-		int[] state  = Permutations.init(0, 6);
-		int[] expect = {5, 4, 3, 2, 1, 0};
+		int[] state  = RepetitionPermutations.init(0, 6);
+		int[] expect = {};
 
 		assertArrayEquals(expect, state);
-		assertFalse(Permutations.next(0, state));
+		assertFalse(RepetitionPermutations.next(6, state));
 
 		// when next returns with false
 		// no changes to state happens
@@ -72,61 +66,37 @@ class PermutationsTest {
 	 */
 	@Test
 	void initialization_n_equals_1 () {
-		int[] perms = Permutations.init(1, 1);
+		int[] perms = RepetitionPermutations.init(1, 1);
 
 		assertNotNull(perms);
-		assertFalse(Permutations.next(1, perms));
-	}
-
-	/**
-	 * edge case: invalid setup n < k
-	 * no possible permutation can be made
-	 * null is expected as a result
-	 */
-	@Test
-	void initialization_n_lessthan_k () {
-		int[] perms = Permutations.init(3, 2);
-
-		assertNull(perms);
+		assertFalse(RepetitionPermutations.next(1, perms));
 	}
 
 	/**
 	 * simple case for incrementing the next permutation
-	 * only the last value is updated and no flip is required
+	 * only the last value is updated and no recursion
 	 */
 	@Test
-	void nextnofliplast () {
+	void next_no_recursion () {
 		int[] state  = {0, 1, 2, 5, 4, 3};
-		int[] expect = {0, 1, 3, 5, 4, 2};
+		int[] expect = {0, 1, 2, 5, 4, 4};
 
-		assertTrue(Permutations.next(3, state));
+		RepetitionPermutations.next(6, state);
+
 		assertArrayEquals(expect, state);
 	}
 
 	/**
 	 * simple case for incrementing the next permutation
-	 * only the last value is updated and no flip is required
+	 * where items are recursively updated
 	 */
 	@Test
-	void nextnoflipnolast () {
-		int[] state  = {0, 1, 3, 5, 4, 2};
-		int[] expect = {0, 1, 4, 5, 3, 2};
+	void next_recursion () {
+		int[] state  = {0, 5, 5, 5, 5, 5};
+		int[] expect = {1, 0, 0, 0, 0, 0};
 
-		assertTrue(Permutations.next(3, state));
-		assertArrayEquals(expect, state);
-	}
+		RepetitionPermutations.next(6, state);
 
-	/**
-	 * generic case for incrementing the next permutation
-	 * if the non last element is incremented by one
-	 * a flip will be required
-	 */
-	@Test
-	void nextflip () {
-		int[] state  = {0, 1, 5, 4, 3, 2};
-		int[] expect = {0, 2, 1, 5, 4, 3};
-
-		assertTrue(Permutations.next(3, state));
 		assertArrayEquals(expect, state);
 	}
 
@@ -137,13 +107,11 @@ class PermutationsTest {
 	 */
 	@Test
 	void nextend () {
-		int[] state  = {5, 4, 3, 2, 1, 0};
-		int[] expect = {5, 4, 3, 2, 1, 0};
+		int[] state  = {5, 5, 5, 5, 5, 5};
+		int[] expect = {5, 5, 5, 5, 5, 5};
 
-		assertFalse(Permutations.next(3, state));
+		RepetitionPermutations.next(6, state);
 
-		// when next returns with false
-		// no changes to state happens
 		assertArrayEquals(expect, state);
 	}
 
@@ -153,7 +121,7 @@ class PermutationsTest {
 	 */
 	@Test
 	void count_1_of_1 () {
-		assertEquals(1, Permutations.count(1, 1));
+		assertEquals(1, RepetitionPermutations.count(1, 1));
 	}
 
 	/**
@@ -163,17 +131,19 @@ class PermutationsTest {
 	 */
 	@Test
 	void count_1_of_2 () {
-		assertEquals(2, Permutations.count(1, 2));
+		assertEquals(2, RepetitionPermutations.count(1, 2));
 	}
 
 	/**
-	 * Two possible permutation exist
+	 * Four possible permutation exist
+	 *  - [1,1]
 	 *  - [1,2]
 	 *  - [2,1]
+	 *  - [2,2]
 	 */
 	@Test
 	void count_2_of_2 () {
-		assertEquals(2, Permutations.count(2, 2));
+		assertEquals(4, RepetitionPermutations.count(2, 2));
 	}
 
 	/**
@@ -184,35 +154,59 @@ class PermutationsTest {
 	 */
 	@Test
 	void count_1_of_3 () {
-		assertEquals(3, Permutations.count(1, 3));
+		assertEquals(3, RepetitionPermutations.count(1, 3));
 	}
 
 	/**
-	 * Six possible permutation exist
+	 * Nine possible permutation exist
+	 *  - [1,1]
 	 *  - [1,2]
 	 *  - [1,3]
 	 *  - [2,1]
+	 *  - [2,2]
 	 *  - [2,3]
 	 *  - [3,1]
 	 *  - [3,2]
+	 *  - [3,3]
 	 */
 	@Test
 	void count_2_of_3 () {
-		assertEquals(6, Permutations.count(2, 3));
+		assertEquals(9, RepetitionPermutations.count(2, 3));
 	}
 
 	/**
-	 * Six possible permutation exist
+	 * 27 possible permutation exist
+	 *  - [1,1,1]
+	 *  - [1,1,2]
+	 *  - [1,1,3]
+	 *  - [1,2,1]
+	 *  - [1,2,2]
 	 *  - [1,2,3]
+	 *  - [1,3,1]
 	 *  - [1,3,2]
+	 *  - [1,3,3]
+	 *  - [2,1,1]
+	 *  - [2,1,2]
 	 *  - [2,1,3]
+	 *  - [2,2,1]
+	 *  - [2,2,2]
+	 *  - [2,2,3]
 	 *  - [2,3,1]
+	 *  - [2,3,2]
+	 *  - [2,3,3]
+	 *  - [3,1,1]
 	 *  - [3,1,2]
+	 *  - [3,1,3]
 	 *  - [3,2,1]
+	 *  - [3,2,2]
+	 *  - [3,2,3]
+	 *  - [3,3,1]
+	 *  - [3,3,2]
+	 *  - [3,3,3]
 	 */
 	@Test
 	void count_3_of_3 () {
-		assertEquals(6, Permutations.count(3, 3));
+		assertEquals(27, RepetitionPermutations.count(3, 3));
 	}
 
 	/**
@@ -224,91 +218,58 @@ class PermutationsTest {
 	 */
 	@Test
 	void count_1_of_4 () {
-		assertEquals(4, Permutations.count(1, 4));
+		assertEquals(4, RepetitionPermutations.count(1, 4));
 	}
 
 	/**
-	 * Twelve possible permutation exist
+	 * 16 possible permutation exist
+	 *  - [1,1]
 	 *  - [1,2]
 	 *  - [1,3]
 	 *  - [1,4]
 	 *  - [2,1]
+	 *  - [2,2]
 	 *  - [2,3]
 	 *  - [2,4]
 	 *  - [3,1]
 	 *  - [3,2]
+	 *  - [3,3]
 	 *  - [3,4]
 	 *  - [4,1]
 	 *  - [4,2]
 	 *  - [4,3]
+	 *  - [4,4]
 	 */
 	@Test
 	void count_2_of_4 () {
-		assertEquals(12, Permutations.count(2, 4));
+		assertEquals(16, RepetitionPermutations.count(2, 4));
 	}
 
 	/**
-	 * 24 possible permutation exist
-	 *  - [0,1,2]
-	 *  - [0,1,3]
-	 *  - [0,2,1]
-	 *  - [0,2,3]
-	 *  - [0,3,1]
-	 *  - [0,3,2]
-	 *  - [1,0,2]
-	 *  - [1,0,3]
-	 *  - [1,2,0]
-	 *  - [1,2,3]
-	 *  - [1,3,0]
-	 *  - [1,3,2]
-	 *  - [2,0,1]
-	 *  - [2,0,3]
-	 *  - [2,1,0]
-	 *  - [2,1,3]
-	 *  - [2,3,0]
-	 *  - [2,3,1]
-	 *  - [3,0,1]
-	 *  - [3,0,2]
-	 *  - [3,1,0]
-	 *  - [3,1,2]
-	 *  - [3,2,0]
-	 *  - [3,2,1]
+	 * 64 possible permutation exist
+	 * (not listed)
 	 */
 	@Test
 	void count_3_of_4 () {
-		assertEquals(24, Permutations.count(3, 4));
+		assertEquals(64, RepetitionPermutations.count(3, 4));
 	}
 
 	/**
-	 * 24 possible permutation exist
-	 *  - [0,1,2,3]
-	 *  - [0,1,3,2]
-	 *  - [0,2,1,3]
-	 *  - [0,2,3,1]
-	 *  - [0,3,1,2]
-	 *  - [0,3,2,1]
-	 *  - [1,0,2,3]
-	 *  - [1,0,3,2]
-	 *  - [1,2,0,3]
-	 *  - [1,2,3,0]
-	 *  - [1,3,0,2]
-	 *  - [1,3,2,0]
-	 *  - [2,0,1,3]
-	 *  - [2,0,3,1]
-	 *  - [2,1,0,3]
-	 *  - [2,1,3,0]
-	 *  - [2,3,0,1]
-	 *  - [2,3,1,0]
-	 *  - [3,0,1,2]
-	 *  - [3,0,2,1]
-	 *  - [3,1,0,2]
-	 *  - [3,1,2,0]
-	 *  - [3,2,0,1]
-	 *  - [3,2,1,0]
+	 * 256 possible permutation exist
+	 * (not listed)
 	 */
 	@Test
 	void count_4_of_4 () {
-		assertEquals(24, Permutations.count(4, 4));
+		assertEquals(256, RepetitionPermutations.count(4, 4));
+	}
+
+	/**
+	 * Too many RepetitionPermutations exists to list here
+	 * just verify a large calculation
+	 */
+	@Test
+	void count_10_of_10 () {
+		assertEquals(10000000000L, RepetitionPermutations.count(10, 10));
 	}
 
 	/**
@@ -317,7 +278,7 @@ class PermutationsTest {
 	 */
 	@Test
 	void of_empty () {
-		int[][] permutations = Permutations.of(0, 2);
+		int[][] permutations = RepetitionPermutations.of(0, 2);
 		int[][] expect = {{}};
 
 		assertArrayEquals(expect, permutations);
@@ -329,7 +290,7 @@ class PermutationsTest {
 	 */
 	@Test
 	void of_nothing () {
-		int[][] permutations = Permutations.of(2, 0);
+		int[][] permutations = RepetitionPermutations.of(2, 0);
 		int[][] expect = {};
 
 		assertArrayEquals(expect, permutations);
@@ -340,14 +301,17 @@ class PermutationsTest {
 	 */
 	@Test
 	void of () {
-		int[][] permutations = Permutations.of(2, 3);
+		int[][] permutations = RepetitionPermutations.of(2, 3);
 		int[][] expect = {
+			{0, 0},
 			{0, 1},
 			{0, 2},
 			{1, 0},
+			{1, 1},
 			{1, 2},
 			{2, 0},
-			{2, 1}
+			{2, 1},
+			{2, 2}
 		};
 
 		assertArrayEquals(expect, permutations);
@@ -358,14 +322,17 @@ class PermutationsTest {
 	 */
 	@Test
 	void of_string () {
-		String[][] permutations = Permutations.of(2, new String[] {"A", "B", "C"}, String.class);
+		String[][] permutations = RepetitionPermutations.of(2, new String[] {"A", "B", "C"}, String.class);
 		String[][] expect = {
+			{"A", "A"},
 			{"A", "B"},
 			{"A", "C"},
 			{"B", "A"},
+			{"B", "B"},
 			{"B", "C"},
 			{"C", "A"},
-			{"C", "B"}
+			{"C", "B"},
+			{"C", "C"}
 		};
 
 		assertArrayEquals(expect, permutations);
@@ -376,14 +343,17 @@ class PermutationsTest {
 	 */
 	@Test
 	void of_int () {
-		int[][] permutations = Permutations.of(2, new int[] {1, 2, 3});
+		int[][] permutations = RepetitionPermutations.of(2, new int[] {1, 2, 3});
 		int[][] expect = {
+			{1, 1},
 			{1, 2},
 			{1, 3},
 			{2, 1},
+			{2, 2},
 			{2, 3},
 			{3, 1},
-			{3, 2}
+			{3, 2},
+			{3, 3}
 		};
 
 		assertArrayEquals(expect, permutations);
@@ -394,14 +364,17 @@ class PermutationsTest {
 	 */
 	@Test
 	void of_long () {
-		long[][] permutations = Permutations.of(2, new long[] {100000000001L, 100000000002L, 100000000003L});
+		long[][] permutations = RepetitionPermutations.of(2, new long[] {100000000001L, 100000000002L, 100000000003L});
 		long[][] expect = {
+			{100000000001L, 100000000001L},
 			{100000000001L, 100000000002L},
 			{100000000001L, 100000000003L},
 			{100000000002L, 100000000001L},
+			{100000000002L, 100000000002L},
 			{100000000002L, 100000000003L},
 			{100000000003L, 100000000001L},
-			{100000000003L, 100000000002L}
+			{100000000003L, 100000000002L},
+			{100000000003L, 100000000003L}
 		};
 
 		assertArrayEquals(expect, permutations);
@@ -412,14 +385,17 @@ class PermutationsTest {
 	 */
 	@Test
 	void of_char () {
-		char[][] permutations = Permutations.of(2, new char[] {'A', 'B', 'C'});
+		char[][] permutations = RepetitionPermutations.of(2, new char[] {'A', 'B', 'C'});
 		char[][] expect = {
+			{'A', 'A'},
 			{'A', 'B'},
 			{'A', 'C'},
 			{'B', 'A'},
+			{'B', 'B'},
 			{'B', 'C'},
 			{'C', 'A'},
-			{'C', 'B'}
+			{'C', 'B'},
+			{'C', 'C'}
 		};
 
 		assertArrayEquals(expect, permutations);
@@ -430,14 +406,17 @@ class PermutationsTest {
 	 */
 	@Test
 	void of_byte () {
-		int[][] permutations = Permutations.of(2, new int[] {4, 5, 6});
+		int[][] permutations = RepetitionPermutations.of(2, new int[] {4, 5, 6});
 		int[][] expect = {
+			{4, 4},
 			{4, 5},
 			{4, 6},
 			{5, 4},
+			{5, 5},
 			{5, 6},
 			{6, 4},
-			{6, 5}
+			{6, 5},
+			{6, 6}
 		};
 
 		assertArrayEquals(expect, permutations);

@@ -5,11 +5,11 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * This class implements a simple iterator over the permutations for n selections
+ * This class implements a simple iterator over the combinations for n selections with repetition
  * The values for the combination is in the range [0,n) to allow them to be
  * used as indexes to an other set of item
  */
-public class PermutationIterator implements Iterator<int[]> {
+public class RepetitionCombinationIndexIterator implements Iterator<int[]> {
 	protected int[]   state;
 	protected boolean valid;
 	protected int     count;
@@ -20,9 +20,9 @@ public class PermutationIterator implements Iterator<int[]> {
 	 * @param k the number of items to pick
 	 * @param n the number of items to pick from
 	 */
-	public PermutationIterator (int k, int n) {
-		this.count = k;
-		this.state = Permutations.init(k, n);
+	public RepetitionCombinationIndexIterator (int k, int n) {
+		this.count = n;
+		this.state = RepetitionCombinations.init(k, n);
 		this.valid = this.state != null;
 	}
 
@@ -44,9 +44,9 @@ public class PermutationIterator implements Iterator<int[]> {
 		}
 
 		try {
-			return Arrays.copyOf(state, count);
+			return Arrays.copyOf(state, state.length);
 		} finally {
-			valid = Permutations.next(count, state);
+			valid = RepetitionCombinations.next(count, state);
 		}
 	}
 

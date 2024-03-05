@@ -3,7 +3,7 @@ package org.chentelman.base.module.math;
 import java.lang.reflect.Array;
 
 /**
- * Base class for combinations.
+ * Base class for combinations with repetitions.
  *
  * This is a utility class able to initialize a state
  * as well as extract iteratively each combination from the state
@@ -18,13 +18,13 @@ import java.lang.reflect.Array;
  * <n> the key type of the base entity
  * <k> the entity used for the summary
  */
-public class Combinations {
+public class RepetitionCombinations {
 
 	/**
-	 * do not allow instantiation of Combinations class
+	 * do not allow instantiation of RepetitionCombinations class
 	 * only holds static methods
 	 */
-	private Combinations () {
+	private RepetitionCombinations () {
 		// avoid instantiation
 	}
 
@@ -37,7 +37,7 @@ public class Combinations {
 	 */
 	public static void init (int[] values) {
 		for (int i = 0; i < values.length; i += 1) {
-			values[i] = i;
+			values[i] = 0;
 		}
 	}
 
@@ -49,8 +49,8 @@ public class Combinations {
 	 * @return the initialized state of the combination
 	 */
 	public static int[] init (int k, int n) {
-		// 0 < k <= n
-		if (k < 0 || n < k) {
+		// 0 < k, 0 <= n
+		if (k < 0 || n <= 0) {
 			return null;
 		}
 
@@ -71,10 +71,10 @@ public class Combinations {
 	public static boolean next (int n, int[] state) {
 		int k;
 		for (k = state.length - 1; k >= 0; k -= 1) {
-			if (state[k] < (n - state.length + k)) {
+			if (state[k] < n - 1) {
 				state[k] += 1;
 				for (k += 1; k < state.length; k += 1) {
-					state[k] = state[k-1] + 1;
+					state[k] = state[k-1];
 				}
 				return true;
 			}
@@ -98,33 +98,14 @@ public class Combinations {
 	}
 
 	/**
-	 * This is n! / ((n-k)! * k!)
-	 *
-	 * We can use the identity
-	 *  - k * Binom(n,k) = n * Binom(n-1,k-1)
-	 *
-	 * which has the advantage that we will only get
-	 * an arithmetic overflow if and only if Binom(n,k) > Integer.MAX_VALUE
+	 * This is (n+k-1)! / ((n-1)! * k!)
 	 *
 	 * @param k number of items to pick
 	 * @param n number of items to pick from
 	 * @return the amount of combinations to pick
 	 */
 	public static long count (int k, int n) {
-		// Binom(n,k) = Binom(n,n-k)
-		//
-		// we can use the min of k and n-k
-		// to reduce the amount of recursive call
-		// until k is reduced to 0
-		if (k > n - k) {
-			k = n - k;
-		}
-
-		if (n <= 1 || k <= 0) {
-			return 1;
-		}
-
-		return n * count(k - 1, n - 1) / k;
+		return Combinations.count(k, n + k - 1);
 	}
 
 	/**
@@ -271,7 +252,6 @@ public class Combinations {
 
 		return i == c && !hasNext ? combis : new byte[0][];
 	}
-
 }
 
 

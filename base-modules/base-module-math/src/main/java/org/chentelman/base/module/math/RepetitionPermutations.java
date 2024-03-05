@@ -3,7 +3,7 @@ package org.chentelman.base.module.math;
 import java.lang.reflect.Array;
 
 /**
- * Base class for permutations.
+ * Base class for permutations with repetition.
  *
  * This is a utility class able to initialize a state
  * as well as extract iteratively each permutation from the state
@@ -15,29 +15,27 @@ import java.lang.reflect.Array;
  * <n> the number of items to pick from
  * <k> the number of items to pick
  */
-public class Permutations {
+public class RepetitionPermutations {
 
 	/**
 	 * do not allow instantiation of Permutations class
 	 * only holds static methods
 	 */
-	private Permutations () {
+	private RepetitionPermutations () {
 		// avoid instantiation
 	}
 
 	/**
 	 * Initialize an array of values to be the first permutation.
-	 * the number of items to pick from deduced to be the length of the values array
+	 * the number of items to pick is deduced to be the length of the values array
+	 * the number of items to pick from is assumed to be greater or equal than the items to pick
 	 *
 	 * @param values the array to initialize
 	 */
-	public static void init (int k, int[] values) {
+	public static void init (int[] values) {
 		int i;
-		for (i = 0; i < k; i += 1) {
-			values[i] = i;
-		}
-		for (; i < values.length; i += 1) {
-			values[i] = values.length - 1 + k - i;
+		for (i = 0; i < values.length; i += 1) {
+			values[i] = 0;
 		}
 	}
 
@@ -49,14 +47,14 @@ public class Permutations {
 	 * @return the initialized state of the permutation
 	 */
 	public static int[] init (int k, int n) {
-		// 0 < k <= n
-		if (k < 0 || n < k) {
+		// 0 < k, 0 <= n
+		if (k < 0 || n <= 0) {
 			return null;
 		}
 
-		int[] state = new int[n];
+		int[] state = new int[k];
 
-		init (k, state);
+		init (state);
 
 		return state;
 	}
@@ -64,137 +62,41 @@ public class Permutations {
 	/**
 	 * Update the state to be the next permutation in the list
 	 *
-	 * @param k the number of items to pick
+	 * @param n the number of items to pick from
 	 * @param state the current state of the permutation
 	 * @return true in case a next state does exist, false otherwise
 	 */
-	public static boolean next (int k, int[] state) {
-		int l;
-		int pivot;
+	public static boolean next (int n, int[] state) {
+		int i;
 
-		// traverse the state array from the end backwards
-		// until the first change from a smaller to a greater number is found
-		// to identify the pivot point
+		// starting from the end of the array find the first non "capped" value
+		// a capped value is considered the maximum allowed value in the array
+		// and is equal to n - 1
 		//
-		// in the initial state this will be just a pointer to the
-		// item just after the size of the array
-		//
-		//           pivot
-		//             v
-		//  [ 0, 1, 2, 3, 6, 5, 4 ]
-		//                ^
-		//                l
-		//
-		// in case this has been further updated
-		//
-		//        pivot
-		//          v
-		//  [ 0, 1, 2, 6, 5, 4, 3 ]
-		//             ^
-		//             l
-		for (l = state.length - 1; l > 0 && state[l-1] >= state[l]; l -= 1);
+		// this is because for n amount of picks the valid options are
+		// 0, 1, 2, ..., n - 1
+		for (i = state.length - 1; i >= 0 && state[i] >= n - 1; i -= 1);
 
-		// in case no such case is found there is no next state
-		if (l <= 0) {
+		// if we have reached the start of the array and not found an
+		// applicable value, then all values are "capped" and therefore
+		// no other states exist
+		if (i < 0) {
 			return false;
 		}
 
-		// the pivot point is the element to be updated
-		pivot = l - 1;
+		// increase the identified value by one,
+		// and set all subsequent values equal to zero
+		state[i] += 1;
 
-		// update l to point to the smallest value after the pivot point
-		// that is also greater than the pivot's point value
-		//
-		// in the initial state this will move the l value to the last element
-		// in the state
-		//
-		//           pivot
-		//             v
-		//  [ 0, 1, 2, 3, 6, 5, 4 ]
-		//                      ^
-		//                      l
-		for (int m = l + 1; m < state.length; m += 1) {
-			if (state[pivot] < state[m] && state[m] < state[l]) {
-				l = m;
-			}
-		}
-
-		// swap the pivot point with the identified l item
-		int s = state[pivot];
-		state[pivot] = state[l];
-		state[l] = s;
-
-		// if the pivot point is not the last item to pick
-		// we need to reset the values right after it
-		//
-		// as the smallest values will be on the right
-		// we do swap all of the items on the right to
-		// bring the smallest values first
-		//
-		// but also swap all values after the k threshold
-		// to avoid generating multiple values of the same state
-		//
-		// with a starting point of
-		//
-		//        pivot
-		//          v
-		//  [ 0, 1, 2, 6, 5, 4, 3 ]
-		//                ^
-		//                k
-		//
-		// the first flip will bring the state as
-		//
-		//        pivot
-		//          v
-		//  [ 0, 1, 2, 3, 4, 5, 6 ]
-		//                ^
-		//                k
-		//
-		// and the second flip as
-		//
-		//        pivot
-		//          v
-		//  [ 0, 1, 2, 3, 6, 5, 4 ]
-		//                ^
-		//                k
-		//
-		// the last flip will not affect the
-		// items in the first part of the array
-		// that will be the next permutation
-		// but will skip states such as
-		//
-		//   [ 0, 1, 2, 3, 4, 6, 5 ]
-		//
-		// that would yield a duplicate permutation
-		if (k - 1 > pivot) {
-			flip (pivot + 1, state.length - 1, state);
-			flip (k,         state.length - 1, state);
+		for (i += 1; i < state.length; i += 1) {
+			state[i] = 0;
 		}
 
 		return true;
 	}
 
 	/**
-	 * Utility method to flip a section of an array
-	 * swapping the start and end elements while
-	 * incrementing the start element and decrementing
-	 * the end element by one
-	 *
-	 * @param start the starting position to flip
-	 * @param end the ending position to flip
-	 * @param state the array to flip
-	 */
-	private static void flip (int start, int end, int[] state) {
-		int swap;
-		for (; start < end; start += 1, end -= 1) {
-			swap         = state[start];
-			state[start] = state[end];
-			state[end]   = swap;
-		}
-	}
-
-	/**
-	 * This is n! / (n-k)!
+	 * This is n ^ k
 	 *
 	 * @param k number of items to pick
 	 * @param n number of items to pick from
@@ -203,8 +105,12 @@ public class Permutations {
 	public static long count (int k, int n) {
 		long r = 1;
 
-		for (k = n - k + 1; k <= n; k += 1) {
-			r *= k;
+		if (k < 0 || n < 0) {
+			return 0;
+		}
+
+		for (; k > 0; k -= 1) {
+			r *= n;
 		}
 
 		return r;
@@ -228,7 +134,7 @@ public class Permutations {
 		while (hasNext && i < c) {
 			System.arraycopy(state, 0, perms[i], 0, k);
 			i += 1;
-			hasNext = next(k, state);
+			hasNext = next(n, state);
 		}
 
 		return i == c && !hasNext ? perms : new int[0][];
@@ -253,7 +159,7 @@ public class Permutations {
 		while (hasNext && i < c) {
 			TranslateUtils.copy (state, values, perms[i]);
 			i += 1;
-			hasNext = next(k, state);
+			hasNext = next(values.length, state);
 		}
 
 		return i == c && !hasNext ? perms : (T[][]) Array.newInstance(clazz, 0, 0);
@@ -277,7 +183,7 @@ public class Permutations {
 		while (hasNext && i < c) {
 			TranslateUtils.copy(state, values, perms[i]);
 			i += 1;
-			hasNext = next(k, state);
+			hasNext = next(values.length, state);
 		}
 
 		return i == c && !hasNext ? perms : new int[0][];
@@ -301,7 +207,7 @@ public class Permutations {
 		while (hasNext && i < c) {
 			TranslateUtils.copy(state, values, perms[i]);
 			i += 1;
-			hasNext = next(k, state);
+			hasNext = next(values.length, state);
 		}
 
 		return i == c && !hasNext ? perms : new long[0][];
@@ -325,7 +231,7 @@ public class Permutations {
 		while (hasNext && i < c) {
 			TranslateUtils.copy(state, values, perms[i]);
 			i += 1;
-			hasNext = next(k, state);
+			hasNext = next(values.length, state);
 		}
 
 		return i == c && !hasNext ? perms : new char[0][];
@@ -349,7 +255,7 @@ public class Permutations {
 		while (hasNext && i < c) {
 			TranslateUtils.copy(state, values, perms[i]);
 			i += 1;
-			hasNext = next(k, state);
+			hasNext = next(values.length, state);
 		}
 
 		return i == c && !hasNext ? perms : new byte[0][];

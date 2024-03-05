@@ -4,9 +4,9 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * This class implements a simple iterator over the combinations for a set of items
+ * This class implements a simple iterator over the combinations for a set of items with repetition
  */
-public class CombinationValueIterator<T> implements Iterator<T[]> {
+public class RepetitionCombinationObjectIterator<T> implements Iterator<T[]> {
 	protected int[]   state;
 	protected boolean valid;
 	protected int     count;
@@ -20,9 +20,9 @@ public class CombinationValueIterator<T> implements Iterator<T[]> {
 	 * @param values the values to pick from
 	 * @param clazz the type of the values to pick from
 	 */
-	public CombinationValueIterator (int k, T[] values, Class<T> clazz) {
+	public RepetitionCombinationObjectIterator (int k, T[] values, Class<T> clazz) {
 		this.count = values.length;
-		this.state = Combinations.init(k, values.length);
+		this.state = RepetitionCombinations.init(k, values.length);
 		this.valid = this.state != null;
 		this.items = values;
 		this.clazz = clazz;
@@ -46,9 +46,9 @@ public class CombinationValueIterator<T> implements Iterator<T[]> {
 		}
 
 		try {
-			return Combinations.copy(state, items, clazz);
+			return TranslateUtils.copy(state, items, clazz);
 		} finally {
-			valid = Combinations.next(count, state);
+			valid = RepetitionCombinations.next(count, state);
 		}
 	}
 }

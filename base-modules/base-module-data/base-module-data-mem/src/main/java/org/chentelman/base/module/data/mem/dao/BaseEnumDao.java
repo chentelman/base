@@ -26,7 +26,7 @@ public class BaseEnumDao<E extends BaseEnumType> extends BaseComponent implement
 	private List<E> list;
 
 	/**
-	 * This will initialise the dao for the specific enumeration
+	 * This will initialize the dao for the specific enumeration
 	 *
 	 * @param type the class type of the enumeration
 	 * @throws ClassCastException in case the type is not an enumeration.

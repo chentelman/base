@@ -12,7 +12,6 @@ import org.chentelman.base.testing.objects.BaseObjectServiceImpl;
 import org.chentelman.base.testing.service.service.BaseTestServiceListableService;
 import org.chentelman.base.testing.service.service.BaseTestServiceListableServiceImpl;
 import org.springframework.beans.factory.ListableBeanFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
@@ -132,8 +131,7 @@ public class BaseTestingConfiguration extends BaseComponent {
 	/**
 	 * @return a bean for {@link WebClient}
 	 */
-	@Bean
-	@Qualifier("testingWebClient")
+	@Bean(name = "testingWebClient")
 	public WebClient webClient (ServerProperties properties) {
 		if (webClient == null) {
 			webClient = WebClient.builder()

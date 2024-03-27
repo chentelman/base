@@ -10,7 +10,7 @@ public class CoreConfiguration extends BaseComponent {
 
 	@Bean
 	@ConditionalOnMissingBean(CoreExceptionHandler.class)
-	public CoreExceptionHandler CoreExceptionHandler () {
+	public CoreExceptionHandler coreExceptionHandler () {
 		return new CoreExceptionHandler();
 	}
 }

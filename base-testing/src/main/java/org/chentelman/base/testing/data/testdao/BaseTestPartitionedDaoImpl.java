@@ -181,7 +181,8 @@ public class BaseTestPartitionedDaoImpl<E extends BasePartitionedEntity<I, P>, I
 
 	// Utilities
 
-	protected final Map<P, Map<I, E>> getPartitionedMap() {return castTestable ("not a map");}
+	protected Map<P, Map<I, E>> getPartitionedMap() {return castTestable ("not a map");}
+	protected Map<I, E> createNewPartition() {return new HashMap<>();}
 
 	/**
 	 * {@inheritDoc}
@@ -215,7 +216,7 @@ public class BaseTestPartitionedDaoImpl<E extends BasePartitionedEntity<I, P>, I
 				Map<I, E> partition = map.get(pk);
 
 				if (Objects.isNull(partition)) {
-					partition = new HashMap<>();
+					partition = createNewPartition();
 					map.put (pk, partition);
 				}
 

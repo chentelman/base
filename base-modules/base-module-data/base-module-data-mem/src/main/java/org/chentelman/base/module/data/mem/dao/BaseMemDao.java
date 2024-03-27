@@ -1,7 +1,5 @@
 package org.chentelman.base.module.data.mem.dao;
 
-import java.util.Objects;
-
 import org.chentelman.base.module.core.data.BaseCreateDao;
 import org.chentelman.base.module.core.data.BaseDeleteDao;
 import org.chentelman.base.module.core.data.BaseUpdateDao;
@@ -31,23 +29,6 @@ public interface BaseMemDao<E extends BaseEntity<I>, I> extends
 		return update (entity);
 	}
 
-	// update dao interface
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public default E update (E entity) {
-		I id = entity.getId();
-
-		if (Objects.isNull(id)) {
-			return null;
-		}
-
-		put (id, entity);
-		return entity;
-	}
-
 	// delete dao interface
 
 	/**
@@ -56,16 +37,6 @@ public interface BaseMemDao<E extends BaseEntity<I>, I> extends
 	@Override
 	public default void delete(E entity) {
 		deleteById(entity.getId());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public default void deleteById(I id) {
-		if (Objects.nonNull(id)) {
-			remove(id);
-		}
 	}
 }
 

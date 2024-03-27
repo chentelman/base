@@ -249,7 +249,7 @@ public class BaseTestDaoImpl<E extends BaseEntity<I>, I> extends BaseTesterImpl<
 
 	// Utilities
 
-	protected final Map<I, E> getMap() {return castTestable ("not a map");}
+	protected Map<I, E> getMap() {return castTestable ("not a map");}
 
 	/**
 	 * {@inheritDoc}

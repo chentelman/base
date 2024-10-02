@@ -25,7 +25,7 @@
 
 	<properties>
 		<!-- spring boot dependencies -->
-		<spring-boot.version>3.1.2</spring-boot.version>
+		<spring-boot.version>3.3.4</spring-boot.version>
 		<lmax.disruptor.version>3.4.4</lmax.disruptor.version>
 
 		<!-- plugin development dependencies -->
